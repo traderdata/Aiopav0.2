@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :require_login, :except => [:signin,:new, :signinprocess, :signup, :signupprocess]
+  include ApplicationHelper
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def signin
@@ -11,38 +11,53 @@ class UsersController < ApplicationController
   end
 
   def signout
-    session.delete(:suplier_id)
+    session.delete(:company_id)
     session.delete(:user_id)
     redirect_to :signin
   end
 
   def signupprocess
-    #first we should check if the company exists
-    Suplier.transaction do
-      @suplier = Suplier.new
 
-      @suplier.name=params.fetch(:company)
-      if @suplier.save
+    if verify_recaptcha
+      #first we should check if the company exists
+      Suplier.transaction do
+        @suplier = Suplier.new
 
-        #we must register the admin user now
-        @user = User.new
-        @user.firstname = 'Admin'
-        @user.lastname = 'Admin'
-        @user.email = params.fetch(:email)
-        @user.password='123'
-        @user.role='A'
+        @suplier.name=params.fetch(:company)
+        if @suplier.save
 
-        if @user.save
-          redirect_to :signin
+          #we must register the admin user now
+          @user = User.new
+          @user.firstname = 'Admin'
+          @user.lastname = 'Admin'
+          @user.email = params.fetch(:email)
+          rand_password=('0'..'z').to_a.shuffle.first(8).join
+          @user.password=rand_password
+          @user.password_confirmation=rand_password
+          @user.role='A'
+
+          if @user.save
+            redirect_to :signin
+          else
+            @user.errors.full_messages.each do |message|
+              flash_message :error, message
+            end
+
+            redirect_to :signup
+            end
         else
-          redirect_to :signup, alert: @suplier.errors
+
+          @suplier.errors.full_messages.each do |message|
+            flash_message :error, message
           end
-      else
-        redirect_to :signup, flash: { errors: @suplier.errors }
+          redirect_to :signup
+        end
       end
+
+    else
+      flash_message :error, 'Wrong captcha validation.'
+      redirect_to :signup
     end
-
-
 
   end
 
@@ -50,22 +65,14 @@ class UsersController < ApplicationController
     @password = params.fetch(:password)
     @email = params.fetch(:email)
 
-    #first we should check if the company exists
-    @company = Suplier.find_by_name(params.fetch(:company))
-
     #salvando cookie
     if params.has_key?(:remember)
-      cookies[:suplier] = params.fetch(:company)
       cookies[:email] = params.fetch(:email)
     end
 
-    if @company.nil?
-      redirect_to :signin, alert: 'Are you sure this is the Company name?'
-    else
       #check login password and suplier
-      @user = User.where(email: @email, password: @password, suplier_id: @company.id)
+      @user = User.where(email: @email, password: @password, suplier_id: session[:company_id])
       if @user.count > 0
-        session[:suplier_id] = @company.id
         session[:user_id] = @user.first.id
         session[:user_role] = @user.first.role
 
@@ -73,7 +80,7 @@ class UsersController < ApplicationController
       else
         redirect_to :signin, alert: 'Wrong username/password'
       end
-    end
+
   end
 
   # GET /users

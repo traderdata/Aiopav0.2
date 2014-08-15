@@ -40,10 +40,7 @@
           <%=form_tag('/users/signinprocess')  do%>
               <fieldset>
                 <div class="form-group">
-                  <input class="form-control" placeholder="Company" name="company" type="text" autofocus value="<%=cookies[:suplier]%>">
-                </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="E-mail" name="email" type="email" value="<%=cookies[:email]%>">
+                  <input class="form-control" placeholder="E-mail" name="email" type="email" value="<%=cookies[:email]%>" autofocus>
                 </div>
                 <div class="form-group">
                   <input class="form-control" placeholder="Password" name="password" type="password" value="">
@@ -53,13 +50,11 @@
                     <input name="remember" type="checkbox" value="ON">Remember Me
                   </label>
                 </div>
-                <div class="checkbox">
-                  <label>
-                    <%=link_to 'Sign up here for free', signup_path  %>
-                  </label>
-                </div>
+
                 <!-- Change this to a button or input when using this as a form -->
                 <%= submit_tag "Login", class: 'btn btn-lg btn-success btn-block' %>
+                <%=link_to 'Sign up for free', root_url(subdomain: 'www') , class: 'btn btn-lg btn-primary btn-block' %>
+
               </fieldset>
           <%end%>
         </div>

@@ -32,5 +32,14 @@ en:
           retypepassword: Confirm Password
           role-user: User
           roler-admin: Administrator
+        login:
+          fields:
+            company: Company
+          messages:
+            company-exist: Company name already taken
+            company-wrong: Company name must have more than 3 letters
+
+
+
   buttons:
     save: Save
