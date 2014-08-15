@@ -1,0 +1,49 @@
+<%= form_for(@marketplace) do |f| %>
+  <% if @marketplace.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@marketplace.errors.count, "error") %> prohibited this suplier from being saved:</h2>
+
+      <ul>
+      <% @marketplace.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <div class="row">
+        <div class="col-lg-12">
+          <form role="form">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label><%= f.label :marketplace%></label>
+                      <% options = options_from_collection_for_select(@marketplaces, :id, :name, @marketplace.marketplace_id) %>
+                  <%= f.select :marketplace_id,  options,  {},{class:'form-control'}%>
+                </div>
+                <div class="form-group">
+                  <label><%= f.label :login%></label>
+                  <%= f.text_field :login, class:'form-control' %>
+                </div>
+                <div class="form-group">
+                  <label><%= f.label :password%></label>
+                  <%= f.password_field :password, class:'form-control'%>
+                </div>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <%= f.submit "Save",  class: "btn btn-default", data:{ confirm: "Are you sure?" }  %>
+              </div>
+            </div>
+
+
+          <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+      </div>
+ </form>
+
+<% end %>

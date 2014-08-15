@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Procurement Center</title>
+
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="login-panel panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Sign Up</h3>
+        </div>
+        <div class="panel-body">
+          <% flash.each do |name, msg| -%>
+              <%= content_tag :div, msg, class: 'alert alert-warning' %>
+          <% end -%>
+          <%=form_tag('/users/signupprocess')  do%>
+              <fieldset>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Company" name="company" type="text" autofocus >
+                  <p class="help-block">Your aplication address will be your company name .procurementcenter.com<br>Ex. xpto.procurementcenter.com</p>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Administrator E-mail" name="email" type="email" >
+                </div>
+                <!-- Change this to a button or input when using this as a form -->
+                <%= submit_tag "SignUp", class: 'btn btn-lg btn-success btn-block' %>
+              </fieldset>
+          <%end%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
